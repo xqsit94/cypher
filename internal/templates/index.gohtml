@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cypher - Encoder/Decoder</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" data-mode="encode">Encoder</button>
+            <button class="tab" data-mode="decode">Decoder</button>
+        </div>
+
+        <div class="input-group">
+            <div class="input-field">
+                <label class="input-label">Secret Key</label>
+                <input type="password" id="secretKey" placeholder="Enter secret key..." value="{{.SecretKey}}">
+            </div>
+            <div class="input-field">
+                <label class="input-label">Salt Key</label>
+                <input type="text" id="saltKey" placeholder="Enter salt key..." value="{{.SaltKey}}">
+            </div>
+        </div>
+
+        <div class="panels">
+            <div class="panel">
+                <label class="input-label">Input</label>
+                <textarea id="inputText" placeholder="Enter text to encode..."></textarea>
+            </div>
+            <div class="panel">
+                <label class="input-label">Output</label>
+                <textarea id="outputText" placeholder="Result will appear here..." readonly></textarea>
+            </div>
+        </div>
+
+        <footer>
+            Made with <span class="heart">❤</span> by xqsit94
+        </footer>
+    </div>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
