@@ -1,86 +1,56 @@
 package main
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/hmac"
-	"crypto/sha256"
-	"encoding/hex"
-	"fmt"
 	"log"
+	"net/http"
 	"os"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
+	"github.com/xqsit94/cypher/internal/handlers"
 )
 
-func Encrypt(plaintext, key string) (string, error) {
-	block, err := aes.NewCipher([]byte(key))
-	if err != nil {
-		return "", err
-	}
-
-	aesGCM, err := cipher.NewGCM(block)
-	if err != nil {
-		return "", err
-	}
-
-	nonce := make([]byte, aesGCM.NonceSize())
-	ciphertext := aesGCM.Seal(nonce, nonce, []byte(plaintext), nil)
-	return hex.EncodeToString(ciphertext), nil
-}
-
-func Decrypt(ciphertextHex, key string) (string, error) {
-	data, err := hex.DecodeString(ciphertextHex)
-	if err != nil {
-		return "", err
-	}
-
-	block, err := aes.NewCipher([]byte(key))
-	if err != nil {
-		return "", err
-	}
-
-	aesGCM, err := cipher.NewGCM(block)
-	if err != nil {
-		return "", err
-	}
-
-	nonceSize := aesGCM.NonceSize()
-	nonce, ciphertext := data[:nonceSize], data[nonceSize:]
-	plaintext, err := aesGCM.Open(nil, nonce, ciphertext, nil)
-	if err != nil {
-		return "", err
-	}
-
-	return string(plaintext), nil
-}
-
-func GenerateKey(salt, secret string) string {
-	h := hmac.New(sha256.New, []byte(salt))
-	h.Write([]byte(secret))
-	return fmt.Sprintf("%x", h.Sum(nil))[:32]
-}
-
 func main() {
-	err := godotenv.Load()
-	if err != nil {
+	// Load environment variables
+	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	secret := os.Getenv("SECRET_KEY")
-	salt := os.Getenv("SALT_KEY")
+	// Initialize router
+	r := chi.NewRouter()
 
-	key := GenerateKey(salt, secret)
+	// Middleware
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.RealIP)
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
 
-	encoded, err := Encrypt("Hello, World!", key)
-	if err != nil {
+	// File server for static files
+	fileServer := http.FileServer(http.Dir("static"))
+	r.Handle("/static/*", http.StripPrefix("/static/", fileServer))
+
+	// Routes
+	r.Get("/", handlers.HomeHandler)
+	r.Post("/encrypt", handlers.EncryptHandler)
+	r.Post("/decrypt", handlers.DecryptHandler)
+
+	// Get port from environment
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Printf("Server starting on port %s", port)
+	if err := http.ListenAndServe(":"+port, r); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Encoded:", encoded)
-
-	decoded, err := Decrypt(encoded, key)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Decoded:", decoded)
 }
