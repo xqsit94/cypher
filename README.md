@@ -9,7 +9,7 @@ The easiest way to run this application is using Docker. The image is available 
 ### Basic Usage
 
 ```bash
-docker run -p 8860:8860 xqsit94/cypher
+docker run --rm --name cypher -p 8860:8860 xqsit94/cypher
 ```
 
 This will start the application on port 8860. You can access it at http://localhost:8860
