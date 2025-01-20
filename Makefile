@@ -9,7 +9,7 @@ build:
 
 # Run the docker image locally
 run:
-	docker run -p 8860:8860 $(DOCKER_USERNAME)/$(IMAGE_NAME):$(VERSION)
+	docker run -p 8000:8000 $(DOCKER_USERNAME)/$(IMAGE_NAME):$(VERSION)
 
 # Push the image to Docker Hub
 push:

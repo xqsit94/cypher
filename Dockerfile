@@ -34,11 +34,11 @@ COPY --from=0 /app/internal/templates ./internal/templates
 # Copy the .env file
 COPY .env .
 
-# Expose port 8860
-EXPOSE 8860
+# Expose port 8000
+EXPOSE 8000
 
 # Set environment variable for the port
-ENV PORT=8860
+ENV PORT=8000
 
 # Run the binary
 CMD ["./main"]
