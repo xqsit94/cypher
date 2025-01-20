@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'">
     <title>Cypher - Encoder/Decoder</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
@@ -17,11 +18,11 @@
         <div class="input-group">
             <div class="input-field">
                 <label class="input-label">Secret Key</label>
-                <input type="password" id="secretKey" placeholder="Enter secret key..." value="{{.SecretKey}}">
+                <input type="password" id="secretKey" placeholder="Enter secret key..." autocomplete="off">
             </div>
             <div class="input-field">
                 <label class="input-label">Salt Key</label>
-                <input type="text" id="saltKey" placeholder="Enter salt key..." value="{{.SaltKey}}">
+                <input type="text" id="saltKey" placeholder="Enter salt key..." autocomplete="off">
             </div>
         </div>
 

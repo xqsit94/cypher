@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"html/template"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/xqsit94/cypher/internal/crypto"
@@ -16,19 +15,9 @@ type Response struct {
 	Error   string `json:"error,omitempty"`
 }
 
-type PageData struct {
-	SecretKey string
-	SaltKey   string
-}
-
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	data := PageData{
-		SecretKey: os.Getenv("SECRET_KEY"),
-		SaltKey:   os.Getenv("SALT_KEY"),
-	}
-
 	tmpl := template.Must(template.ParseFiles("internal/templates/index.gohtml"))
-	if err := tmpl.Execute(w, data); err != nil {
+	if err := tmpl.Execute(w, nil); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

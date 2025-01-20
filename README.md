@@ -9,10 +9,10 @@ The easiest way to run this application is using Docker. The image is available 
 ### Basic Usage
 
 ```bash
-docker run --rm --name cypher -p 8860:8860 xqsit94/cypher
+docker run --rm --name cypher -p 8000:8000 xqsit94/cypher
 ```
 
-This will start the application on port 8860. You can access it at http://localhost:8860
+This will start the application on port 8000. You can access it at http://localhost:8000
 
 ## Building from Source
 
@@ -26,12 +26,12 @@ docker build -t xqsit94/cypher .
 
 3. Run the container:
 ```bash
-docker run -p 8860:8860 xqsit94/cypher
+docker run -p 8000:8000 xqsit94/cypher
 ```
 
 ## Usage
 
-1. Open your browser and navigate to http://localhost:8860
+1. Open your browser and navigate to http://localhost:8000
 2. Choose between Encoder or Decoder mode
 3. Enter your secret key and salt key (if not provided via environment variables)
 4. Enter the text you want to encode/decode
